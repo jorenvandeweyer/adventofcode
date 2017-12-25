@@ -1,68 +1,32 @@
-function run(debug = true){
-  let h = 0;
+//credit: https://www.reddit.com/r/adventofcode/comments/7lms6p/2017_day_23_solutions/drnh5sx/
+//lazy me
 
-  // set b 99
-  // set c b
-  let start = end = 57;
+console.log(solve2());
 
-  // jnz a 2
-  // jnz 1 5
-  if (!debug) {
-    // mul b 100
-    // sub b -100000
-    // set c b
-    // sub c -17000
-    start = (start * 100) + 100000;
-    end = start + 17000;
+function solve2(n) {
+  let r = {
+    b: 57,
+    c: 57,
+    d: 0,
+    f: 0,
+    g: 0,
+    h: 0
   }
-
-  while (start <= end) {
-    // set f 1
-    // set d 2
-    let isPrime = true;
-    let x = 2;
-
-    while (x < start) {
-      // set e 2
-      let y = 2;
-
-      while (y < start) {
-        // set g d
-        // mul g e
-        // sub g b
-        // jnz g 2
-        // set f 0
-        if ((d * e) - b === 0) isPrime = false;
-
-        // sub e -1
-        y++;
-
-        // set g e
-        // sub g b
-        // jnz g -8
+  r['b'] = r['b'] * 100 + 100000
+  r['c'] = r['b'] + 17000
+  do {
+    r['f'] = 1
+    r['d'] = 2
+    for (let d = r['d']; d * d < r['b']; ++d) {
+      if (r['b'] % d === 0) {
+        r['f'] = 0
+        break
       }
-      // sub d -1
-      x++;
-
-      // set g d
-      // sub g b
-      // jnz g -13
     }
+    if (r['f'] === 0) r['h']++
+    r['g'] = r['b'] - r['c']
+    r['b'] += 17
+  } while (r['g'] !== 0)
 
-    // jnz f 2
-    // sub h -1
-    if (!isPrime) h++;
-
-    // set g b
-    // sub g c
-    // jnz g 2
-    // jnz 1 3
-    // sub b -17
-    // jnz 1 -23
-    b += 17
-  }
-
-  return h;
+  return r['h']
 }
-
-console.log(run());
