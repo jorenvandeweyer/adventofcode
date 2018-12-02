@@ -251,21 +251,41 @@ uqcipadzwtnhetcgvxgobmkfyr`;
 
 const values = input.split("\n");
 
-let two = 0;
-let three = 0;
-
 for (let i =0; i < values.length; i++) {
-    if (check(values[i], 2)) two++;
-    if (check(values[i], 3)) three++;
+    const result = mostCommon(values[i], values);
+    if (result) {
+        console.log(result);
+        return console.log(applyMask(result[1], result[0]));
+    }
 }
-console.log(two, three, two*three);
 
-function check(string, number) {
-    const letters = string.split("");
-    for (let i = 0; i < letters.length; i++) {
-        const regexp = new RegExp(letters[i], "g");
-        const result = string.match(regexp);
-        if (result.length === number) return true;
+function mostCommon(str, values) {
+    for (let i = 0; i < values.length; i++) {
+        const m = getMask(str, values[i]);
+        const size = m.match(/1/g).length;
+        if (size === str.length -1) {
+            return [m, str];
+        }
     }
     return false;
+}
+
+function getMask(str1, str2) {
+    let mask = "";
+    for (let i = 0; i < str1.length; i++) {
+        if (str1[i] === str2[i]) {
+            mask += "1";
+        } else {
+            mask += "0";
+        }
+    }
+    return mask;
+}
+
+function applyMask(string, mask){
+    let result = "";
+    for (let i = 0; i < mask.length; i++) {
+        if (mask[i] === "1") result += string[i];
+    }
+    return result;
 }
