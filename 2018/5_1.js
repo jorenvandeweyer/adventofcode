@@ -17,14 +17,10 @@ function reaction(s) {
     return string;
 }
 
-
 async function main() {
     const input = (await getInput("./input_5.txt")).raw;
     result = reaction(input);
     console.log(result, result.length);
 }
-
-
-
 
 main();
