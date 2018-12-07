@@ -4,6 +4,7 @@ const modules = {};
 
 const installableModules = [];
 const installed = [];
+let installingTime = 0;
 
 function installOrder(instructions) {
     for (let i = 0; i < instructions.length; i++) {
@@ -13,6 +14,7 @@ function installOrder(instructions) {
                 name: inst.module,
                 dependencies: [],
                 dependant: [],
+                installTime : inst.module.charCodeAt(0)-4,
             };
         }
         modules[inst.module].dependencies.push(inst.dependecy);
@@ -22,6 +24,7 @@ function installOrder(instructions) {
                 name: inst.dependecy,
                 dependencies: [],
                 dependant: [],
+                installTime : inst.dependecy.charCodeAt(0)-4,
             };
         } 
         modules[inst.dependecy].dependant.push(inst.module);
@@ -44,9 +47,20 @@ function installOrder(instructions) {
         installableModules.sort((a, b) => {
             return a.name < b.name ? -1: 1;
         });
-        installed.push(installableModules.shift());
+        const shortestInstallTime = installableModules.reduce((x, y) => (x.installTime < y.installTime) ? x : y).installTime;
+        for (let i = 0; i < 5; i++) {
+            if (installableModules.length > i) {
+                const module = installableModules[i];
+                module.installTime -= shortestInstallTime;
+                if (module.installTime === 0) {
+                    installed.push(installableModules.splice(i, 1)[0]);
+                    i--;
+                }
+            }
+        }
+        installingTime += shortestInstallTime;
     }
-    return installed;
+    return installingTime;
 }
 
 async function main() {
@@ -58,7 +72,7 @@ async function main() {
         }
     });
     const result = installOrder(input);
-    console.log(result.map(module => module.name).join(""));
+    console.log(result);
 }
 
 main();
