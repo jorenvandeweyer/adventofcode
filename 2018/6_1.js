@@ -104,9 +104,10 @@ function largestSize(coordinates) {
 }
 
 async function main() {
+    const time = Date.now();
     const input = (await getInput("./input_6.txt")).lines;
     const result = largestSize(input);
-    console.log(result);
+    console.log(Date.now()-time + "ms",result);
 }
 
 main();

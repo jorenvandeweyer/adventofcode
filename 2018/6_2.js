@@ -41,9 +41,11 @@ function safeSurface(coordinates) {
 }
 
 async function main() {
+    const time = Date.now();
     const input = (await getInput("./input_6.txt")).lines;
     const result = safeSurface(input);
-    console.log(result);
+    console.log(time - Date.now() + "ms",result);
 }
+
 
 main();
