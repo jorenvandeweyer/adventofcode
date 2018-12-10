@@ -1,7 +1,7 @@
 module.exports.grid = (x, y) => {
     const grid = new Array(y);
     for (let i = 0; i < y; i++) {
-        grid[i] = new Array(x);
+        grid[i] = new Array(x).fill(".");
     }
     return grid;
 }
