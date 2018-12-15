@@ -5,5 +5,6 @@ module.exports = async (path) => {
     return {
         raw: file.trim(),
         lines: file.trim().split("\n"),
+        rraw: file,
     }
 }
