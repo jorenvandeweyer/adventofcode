@@ -1,10 +1,31 @@
-const fs = require("fs").promises;
+const fs = require("fs");
 
-module.exports = async (path) => {
-    const file = await fs.readFile(path, "utf8");
-    return {
-        raw: file.trim(),
-        lines: file.trim().split("\n"),
-        rraw: file,
+module.exports = (path) => {
+    return new Parse(path);
+}
+
+class Parse {
+    constructor(path) {
+        this.file = fs.readFileSync(path, 'utf8');
+        this.result = this.file;
+    }
+
+    get trim() {
+        this.result = this.result.trim();
+        return this;
+    }
+
+    get lines() {
+        this.result = this.result.split('\n');
+        return this;
+    }
+
+    get numbers() {
+        this.result = this.result.map(string => parseInt(string));
+        return this;
+    }
+
+    get get() {
+        return this.result;
     }
 }
