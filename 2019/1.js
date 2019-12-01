@@ -1,5 +1,4 @@
-const importInput = require('../importInput');
-const input = importInput('./input_1.txt');
+const Input = require('../tools/input');
 
 /************/
 /** PART 1 **/
@@ -9,12 +8,12 @@ function fuel(number) {
     return Math.floor(number/3)-2;
 }
 
-const parsed = input.trim.lines.numbers.get;
-const result_1 = parsed.reduce((sum, next) => {
-    return sum + fuel(next);
-},0);
-
-console.log('result 1:', result_1);
+async function part1(input) {
+    const parsed = input.trim.lines.numbers.get;
+    return parsed.reduce((sum, next) => {
+        return sum + fuel(next);
+    },0);
+}
 
 /************/
 /** PART 2 **/
@@ -27,8 +26,22 @@ function fuelRecursive(number) {
     return x + fuelRecursive(x);
 }
 
-const result_2 = parsed.reduce((sum, next) => {
-    return sum + fuelRecursive(next);
-}, 0);
+async function part2(input) {
+    const parsed = input.trim.lines.numbers.get;
+    return parsed.reduce((sum, next) => {
+        return sum + fuelRecursive(next);
+    }, 0);
+}
 
-console.log('result 2:', result_2);
+/************/
+/*** MAIN ***/
+/************/
+
+async function main() {
+    const input_1 = await Input(2019, 1).fetch();
+    const input_2 = await Input(2019, 1).fetch();
+    await part1(input_1).then(result => console.log('result 1:', result));
+    await part2(input_2).then(result => console.log('result 2:', result));    
+}
+
+main();
