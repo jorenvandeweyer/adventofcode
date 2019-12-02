@@ -67,6 +67,11 @@ class Input {
     get get() {
         return this.result;
     }
+
+    split(delimeter) {
+        this.result = this.result.split(delimeter);
+        return this;
+    }
 }
 
 module.exports = (year, day) => {
