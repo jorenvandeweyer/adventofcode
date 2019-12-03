@@ -49,6 +49,12 @@ class Input {
         return this
     }
 
+    custom(input) {
+        this.file = input;
+        this.result = this.file;
+        return this;
+    }
+
     get trim() {
         this.result = this.result.trim();
         return this;
@@ -74,6 +80,7 @@ class Input {
     }
 }
 
-module.exports = (year, day) => {
+module.exports = (year, day, custom=false) => {
+    if (custom) return new Input(year, day).custom(custom);
     return new Input(year, day);
 }
