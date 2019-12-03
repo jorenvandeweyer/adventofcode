@@ -3,8 +3,7 @@ const Input = require('../tools/input');
 async function setup(input) {
     const wires = input.trim.lines.get.map(x => x.split(','));
 
-    const paths = [new Set(), new Set()];
-    const distances = [new Map(), new Map()];
+    const paths = [new Map(), new Map()];
 
     wires.forEach((wire, index_wire) => {
         const position = [0, 0];
@@ -32,27 +31,29 @@ async function setup(input) {
 
             for (let i = 1; i <= steps; i++) {
                 totalSteps++;
-                position[0] += dx, position[1] += dy;
+                
+                position[0] += dx;
+                position[1] += dy;
 
-                paths[index_wire].add(position.toString());
-                distances[index_wire].set(position.toString(), totalSteps);
+                paths[index_wire].set(position.toString(), {
+                    totalSteps,
+                    distance: position.map(x => Math.abs(x)).reduce((a, b) => a + b, 0),
+                });
             }
         });
     });
 
-    const intersections = [...paths[0]].filter(coord => paths[1].has(coord));
-
-    return [distances, intersections];
+    const intersections = [...paths[0].keys()].filter(coord => paths[1].has(coord));
+    return [paths, intersections];
 }
 
 /************/
 /** PART 1 **/
 /************/
 
-async function part1(intersections) {
+async function part1(intersections, paths) {
     return intersections.reduce((min, cur) => {
-        const coords = cur.split(',').map(x => Math.abs(parseInt(x)));
-        const distance = coords[0]+coords[1];
+        const distance = paths[0].get(cur).distance;
 
         if (distance < min) return distance;
         return min;
@@ -63,9 +64,9 @@ async function part1(intersections) {
 /** PART 2 **/
 /************/
 
-async function part2(intersections, distances) {
+async function part2(intersections, paths) {
     return intersections.reduce((min, cur) => {
-        const distance = distances[0].get(cur) + distances[1].get(cur);
+        const distance = paths[0].get(cur).totalSteps + paths[1].get(cur).totalSteps;
 
         if (distance < min) return distance;
         return min;
@@ -78,10 +79,10 @@ async function part2(intersections, distances) {
 
 async function main() {
     const input = await Input(2019, 3).fetch();
-    const [distances, intersections] = await setup(input);
+    const [paths, intersections] = await setup(input);
 
-    await part1(intersections).then(result => console.log('result 1:', result));
-    await part2(intersections, distances).then(result => console.log('result 2:', result));    
+    await part1(intersections, paths).then(result => console.log('result 1:', result));
+    await part2(intersections, paths).then(result => console.log('result 2:', result));    
 }
 
 main();
