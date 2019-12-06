@@ -78,6 +78,11 @@ class Input {
         this.result = this.result.split(delimeter);
         return this;
     }
+
+    map(fn) {
+        this.result = this.result.map(x => fn(x));
+        return this;
+    }
 }
 
 module.exports = (year, day, custom=false) => {
