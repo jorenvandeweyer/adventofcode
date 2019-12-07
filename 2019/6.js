@@ -77,7 +77,7 @@ async function main() {
     const input = await Input(2019, 6).fetch();
     const nodes = await setup(input);
     await part1(nodes).then(result => console.log('result 1:', result));
-    await part2(nodes).then(result => console.log('result 2:', result));    
+    await part2(nodes).then(result => console.log('result 2:', result));
 }
 
 main();
