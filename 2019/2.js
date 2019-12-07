@@ -1,34 +1,23 @@
 const Input = require('../tools/input');
+const IntcodeComputer = require('./code/IntcodeComputer');
 
 /************/
 /** PART 1 **/
 /************/
 async function part1(input) {
-    const inputt = input.trim.split(',').numbers.get;
+    const parsed = input.trim.split(',').numbers.get;
 
-    let i = 0;
+    parsed[1] = 12;
+    parsed[2] = 2;
 
-    inputt[1] = 12;
-    inputt[2] = 2;
+    const comp = new IntcodeComputer(parsed);
 
-    loop:
     while (true) {
-        switch(inputt[i]) {
-            case 99:
-                break loop;
-            case 1:
-                inputt[inputt[i+3]] = inputt[inputt[i+1]] + inputt[inputt[i+2]];
-                break
-            case 2:
-                inputt[inputt[i+3]] = inputt[inputt[i+1]] * inputt[inputt[i+2]];
-                break
-            default:
-                console.log(inputt[i]);
-        }
-        i+=4;
+        if (!comp.ok) break;
+        comp.step();
     }
-    return inputt[0];
 
+    return comp.mem[0];
 }
 
 /************/
@@ -40,30 +29,17 @@ async function part2(input) {
 
     for (let first = 0; first <= 99; first++) {
         for (let second = 0; second <= 99; second++) {
-            const inputt = [...parsed];
+            parsed[1] = first;
+            parsed[2] = second;
 
-            inputt[1] = first;
-            inputt[2] = second;
-            let i = 0;
+            const comp = new IntcodeComputer([...parsed])
 
-            loop:
             while (true) {
-                switch(inputt[i]) {
-                    case 99:
-                        break loop;
-                    case 1:
-                        inputt[inputt[i+3]] = inputt[inputt[i+1]] + inputt[inputt[i+2]];
-                        break
-                    case 2:
-                        inputt[inputt[i+3]] = inputt[inputt[i+1]] * inputt[inputt[i+2]];
-                        break
-                    default:
-                        console.log(inputt[i]);
-                }
-                i+=4;
+                if (!comp.ok) break;
+                comp.step();
             }
 
-            if (inputt[0] === 19690720) return 100*first+second;
+            if (comp.mem[0] === 19690720) return 100*first+second;
         }
     }
 }

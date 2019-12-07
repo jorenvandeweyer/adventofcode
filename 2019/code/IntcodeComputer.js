@@ -14,7 +14,7 @@ class IntcodeComputer extends EventListener {
 
     arg(n, set) {
         const mode = Math.floor(this.mem[this.pc] / 10**(n+1)) % 10;
-        if (set) mode ? this.mem[this.pc+n] = set : this.mem[this.mem[this.pc+n]] = set;
+        if (set!==undefined) mode ? this.mem[this.pc+n] = set : this.mem[this.mem[this.pc+n]] = set;
         return mode ? this.mem[this.pc+n] : this.mem[this.mem[this.pc+n]];
     }
 
