@@ -19,16 +19,16 @@ async function part1(input) {
         const ampD = new IntcodeComputer([...parsed]);
         const ampE = new IntcodeComputer([...parsed]);
 
-        ampA.input.push(sequence[0], 0);
-        ampB.input.push(sequence[1]);
-        ampC.input.push(sequence[2]);
-        ampD.input.push(sequence[3]);
-        ampE.input.push(sequence[4]);
+        ampA.send(sequence[0], 0);
+        ampB.send(sequence[1]);
+        ampC.send(sequence[2]);
+        ampD.send(sequence[3]);
+        ampE.send(sequence[4]);
 
-        ampA.addListener('output', output => ampB.push(output));
-        ampB.addListener('output', output => ampC.push(output));
-        ampC.addListener('output', output => ampD.push(output));
-        ampD.addListener('output', output => ampE.push(output));
+        ampA.addListener('output', output => ampB.send(output));
+        ampB.addListener('output', output => ampC.send(output));
+        ampC.addListener('output', output => ampD.send(output));
+        ampD.addListener('output', output => ampE.send(output));
 
         while (true) {
             if (!ampA.ok && !ampB.ok && !ampC.ok && !ampD.ok && !ampE.ok) break;
@@ -65,17 +65,17 @@ async function part2(input) {
         const ampD = new IntcodeComputer([...parsed]);
         const ampE = new IntcodeComputer([...parsed]);
 
-        ampA.input.push(sequence[0], 0);
-        ampB.input.push(sequence[1]);
-        ampC.input.push(sequence[2]);
-        ampD.input.push(sequence[3]);
-        ampE.input.push(sequence[4]);
+        ampA.send(sequence[0], 0);
+        ampB.send(sequence[1]);
+        ampC.send(sequence[2]);
+        ampD.send(sequence[3]);
+        ampE.send(sequence[4]);
 
-        ampA.addListener('output', output => ampB.push(output));
-        ampB.addListener('output', output => ampC.push(output));
-        ampC.addListener('output', output => ampD.push(output));
-        ampD.addListener('output', output => ampE.push(output));
-        ampE.addListener('output', output => ampA.push(output));
+        ampA.addListener('output', output => ampB.send(output));
+        ampB.addListener('output', output => ampC.send(output));
+        ampC.addListener('output', output => ampD.send(output));
+        ampD.addListener('output', output => ampE.send(output));
+        ampE.addListener('output', output => ampA.send(output));
 
         while (true) {
             if (!ampA.ok && !ampB.ok && !ampC.ok && !ampD.ok && !ampE.ok) break;
