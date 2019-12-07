@@ -23,10 +23,6 @@ class IntcodeComputer extends EventListener {
         this.wait = false;
     }
 
-    get() {
-        return 
-    }
-
     step() {
         const op = this.mem[this.pc] % 100;
 
