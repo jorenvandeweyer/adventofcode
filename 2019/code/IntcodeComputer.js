@@ -10,12 +10,25 @@ class IntcodeComputer extends EventListener {
         this.output = [];
         this.halt = false;
         this.wait = false;
+        this.relativeBase = 0;
     }
 
     arg(n, set) {
         const mode = Math.floor(this.mem[this.pc] / 10**(n+1)) % 10;
-        if (set!==undefined) mode ? this.mem[this.pc+n] = set : this.mem[this.mem[this.pc+n]] = set;
-        return mode ? this.mem[this.pc+n] : this.mem[this.mem[this.pc+n]];
+
+        if (set !== undefined) {
+            if (mode === 0) this.mem[this.mem[this.pc+n]] = set;
+            if (mode === 1) this.mem[this.pc+n] = set;
+            if (mode === 2) this.mem[this.mem[this.pc+n] + this.relativeBase] = set;
+        }
+
+        let value = 0;
+        if (mode === 0) value = this.mem[this.mem[this.pc+n]];
+        if (mode === 1) value =  this.mem[this.pc+n];
+        if (mode === 2) value = this.mem[this.mem[this.pc+n] + this.relativeBase];
+        if (value === undefined) value = 0;
+
+        return value;
     }
 
     send(...input) {
@@ -69,6 +82,10 @@ class IntcodeComputer extends EventListener {
             case 8:
                 this.arg(3, (this.arg(1) == this.arg(2)) ? 1 : 0);
                 this.pc += 4;
+                break;
+            case 9:
+                this.relativeBase += this.arg(1);
+                this.pc += 2;
                 break;
             case 99:
                 this.halt = true;
