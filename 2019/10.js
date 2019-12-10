@@ -1,5 +1,4 @@
 const Input = require('../tools/input');
-const Grid = require('../tools/grid');
 
 function asteroidMap(grid, base) {
     const asteroids = new Map();
