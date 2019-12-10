@@ -16,6 +16,22 @@ module.exports = class Grid {
         this.grid = grid;
     }
 
+    clone() {
+        const grid = new Grid(this.width, this.height, this.fill, this.delimeter);
+        grid.grid = this.grid.map(row => [...row]);
+        return grid;
+    }
+
+    static fromArray(array, fill='.', delimeter='') {
+        const width = array[0].length;
+        const height = array.length;
+
+        const grid = new Grid(width, height, fill, delimeter);
+        grid.grid = array[0].map((col, i) => array.map(row => row[i]));
+
+        return grid;
+    }
+
     insert(x, y, fill='+') {
         const [nx, ny] = this.check(x, y);
 

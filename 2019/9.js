@@ -39,10 +39,7 @@ async function main() {
     const input_2 = await Input(2019, 9).fetch();
 
     await part1(input_1).then(result => console.log('result 1:', result));
-    const start = Date.now();
     await part2(input_2).then(result => console.log('result 2:', result));    
-    const end = Date.now();
-    console.log(end-start);
 }
 
 main();
