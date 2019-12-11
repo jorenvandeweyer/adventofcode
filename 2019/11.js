@@ -1,5 +1,6 @@
 const Input = require('../tools/input');
 const IntCode = require('./code/IntcodeComputer');
+const GridMap = require('../tools/gridMap');
 
 /************/
 /** PART 1 **/
@@ -8,14 +9,10 @@ const IntCode = require('./code/IntcodeComputer');
 class Robot {
     constructor(instr) {
         this.brain = new IntCode(instr);
-        this.painted = new Map();
+        this.painted = new GridMap();
         this.x = 0;
         this.y = 0;
         this.dir = [[0, 1], [1, 0], [0, -1], [-1, 0]];
-    }
-
-    color(x, y) {
-        return this.painted.has(`${x},${y}`) ? this.painted.get(`${x},${y}`) : 0
     }
 
     left() {
@@ -27,7 +24,7 @@ class Robot {
     }
 
     step() {
-        this.brain.send(this.color(this.x, this.y));
+        this.brain.send(this.painted.get(this.x, this.y, 0));
 
         const instr = [];
 
@@ -37,7 +34,7 @@ class Robot {
             if (this.brain.output.length) instr.push(this.brain.recv());
         }
 
-        this.painted.set(`${this.x},${this.y}`, instr[0]);
+        this.painted.set(this.x, this.y, instr[0]);
 
         instr[1] ? this.left() : this.right();
 
@@ -67,29 +64,15 @@ async function part2(input, base) {
 
     const robot = new Robot(parsed);
 
-    robot.painted.set('0,0', 1);
+    robot.painted.set(0, 0, 1);
 
     while (robot.brain.ok) {
         robot.step();
     }
     
-    const keys = Array.from(robot.painted.keys()).map(coord => coord.split(',').map(num => parseInt(num)));
+    const string = robot.painted.toString();
 
-    const xMin = Math.min(...keys.map(coord => coord[0]));
-    const yMin = Math.min(...keys.map(coord => coord[1]));
-    const xMax = Math.max(...keys.map(coord => coord[0]));
-    const yMax = Math.max(...keys.map(coord => coord[1]));
-
-    let result = '';
-    for (let y = yMin; y <= yMax; y++) {
-        let row = '\n'
-        for (let x = xMin; x <= xMax; x++) {
-            row += robot.color(x, y);
-        }
-        result = row + result;
-    }
-
-    return result.replace(/0/g, '.').replace(/1/g, '#');
+    return string.replace(/0/g, ' ').replace(/1/g, '#');
 }
 
 /************/
