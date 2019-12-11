@@ -18,6 +18,14 @@ class Robot {
         return this.painted.has(`${x},${y}`) ? this.painted.get(`${x},${y}`) : 0
     }
 
+    left() {
+        this.dir.push(this.dir.shift());
+    }
+
+    right() {
+        this.dir.unshift(this.dir.pop());
+    }
+
     step() {
         this.brain.send(this.color(this.x, this.y));
 
@@ -31,11 +39,7 @@ class Robot {
 
         this.painted.set(`${this.x},${this.y}`, instr[0]);
 
-        if (instr[1]) {
-            this.dir.push(this.dir.shift());
-        } else {
-            this.dir.unshift(this.dir.pop());
-        }
+        instr[1] ? this.left() : this.right();
 
         this.x += this.dir[0][0];
         this.y += this.dir[0][1];    
