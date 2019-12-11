@@ -1,5 +1,4 @@
 const Input = require('../tools/input');
-const Grid = require('../tools/grid');
 
 /************/
 /** PART 1 **/
@@ -61,22 +60,33 @@ async function part2(input) {
         layers.push(layer);
     }
 
-    const grid = new Grid(wide, tall, 0);
+    const grid = new Map();
 
     for (let layer of layers.reverse()) {
         for (let x = 0; x < wide; x++) {
             for (let y = 0; y < tall; y ++) {
-                const value = layer[y][x];
-
-                if (value === 2) continue;
-                grid.insert(x, y, value);
+                if (layer[y][x] === 2) continue;
+                grid.set(`${x},${y}`, layer[y][x]);
             }
-        }
+        } 
     }
 
-    let result = grid.toString().replace(/1/g, 'X').replace(/0/g, ' ');
+    const keys = Array.from(grid.keys()).map(coord => coord.split(',').map(num => parseInt(num)));
 
-    return result;
+    const xMin = Math.min(...keys.map(coord => coord[0]));
+    const yMin = Math.min(...keys.map(coord => coord[1]));
+    const xMax = Math.max(...keys.map(coord => coord[0]));
+    const yMax = Math.max(...keys.map(coord => coord[1]));
+
+    let result = '';
+    for (let y = yMin; y <= yMax; y++) {
+        let row = '\n'
+        for (let x = xMin; x <= xMax; x++) {
+            row += grid.has(`${x},${y}`) ? grid.get(`${x},${y}`) : 0;
+        }
+        result = result + row;
+    }
+    return result.replace(/1/g, 'X').replace(/0/g, ' ');
 }
 
 /************/
