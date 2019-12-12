@@ -70,6 +70,10 @@ async function part2(input) {
 
         const key = dim => moons.map(moon => `${moon[dim]},${moon[`v${dim}`]}`).join(';');
 
+        // if (xSet.has(key('x'))) console.log('x', i, Array.from(xSet).findIndex(v => v===key('x')));
+        // if (ySet.has(key('y'))) console.log('y', i, Array.from(ySet).findIndex(v => v===key('y')));
+        // if (zSet.has(key('z'))) console.log('z', i, Array.from(zSet).findIndex(v => v===key('z')));
+
         (!seen[0] && xSet.has(key('x'))) ? seen[0] = i : xSet.add(key('x'));
         (!seen[1] && ySet.has(key('y'))) ? seen[1] = i : ySet.add(key('y'));
         (!seen[2] && zSet.has(key('z'))) ? seen[2] = i : zSet.add(key('z'));
