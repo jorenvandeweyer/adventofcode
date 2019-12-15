@@ -13,7 +13,7 @@ class IntcodeComputer extends EventListener {
         this.relativeBase = 0;
     }
 
-    arg(n, set) {
+    arg(n, set, disassemble=false) {
         const mode = Math.floor(this.mem[this.pc] / 10**(n+1)) % 10;
 
         if (set !== undefined) {
@@ -22,9 +22,15 @@ class IntcodeComputer extends EventListener {
             if (mode === 2) this.mem[this.mem[this.pc+n] + this.relativeBase] = set;
         }
 
+        if (disassemble) {
+            if (mode === 0) return `*(${this.mem[this.pc+n]})`;
+            if (mode === 1) return `${this.mem[this.pc+n]}`;
+            if (mode === 2) return `*(${this.mem[this.pc+n]}+BASE) (${this.relativeBase})`;
+        }
+
         let value = 0;
         if (mode === 0) value = this.mem[this.mem[this.pc+n]];
-        if (mode === 1) value =  this.mem[this.pc+n];
+        if (mode === 1) value = this.mem[this.pc+n];
         if (mode === 2) value = this.mem[this.mem[this.pc+n] + this.relativeBase];
         if (value === undefined) value = 0;
 
@@ -38,6 +44,63 @@ class IntcodeComputer extends EventListener {
 
     recv() {
         return this.output.shift();
+    }
+
+    argd(n) {
+        return this.arg(n, undefined, true);
+    }
+
+    disassemble(limit) {
+        let op = this.mem[this.pc] % 100;
+        const readable = [this.pc+':\t'];
+        if (limit < this.pc) op = 98;
+
+        switch (op) {
+            case 1:
+                readable.push('ADD', this.argd(3), this.argd(1), this.argd(2));
+                this.pc += 4;
+                break;
+            case 2:
+                readable.push('MUL', this.argd(3), this.argd(1), this.argd(2));
+                this.pc += 4;
+                break;
+            case 3:
+                readable.push('IN ', this.argd(1));
+                this.pc += 2;
+                break;
+            case 4:
+                readable.push('OUT', this.argd(1));
+                this.pc += 2;
+                break;
+            case 5:
+                readable.push('JE ', this.argd(1), this.argd(2));
+                this.pc += 3;
+                break;
+            case 6:
+                readable.push('JNE', this.argd(1), this.argd(2));
+                this.pc += 3;
+                break;
+            case 7:
+                readable.push('LE ', this.argd(3), this.argd(1), this.argd(2));
+                this.pc += 4;
+                break;
+            case 8:
+                readable.push('EQ ', this.argd(3), this.argd(1), this.argd(2));
+                this.pc += 4;
+                break;
+            case 9:
+                readable.push('BAS', this.argd(1));
+                this.pc += 2;
+            case 99:
+                readable.push('HLT');
+                this.pc += 1;
+                break;
+            default:
+                readable.push('MEM', ['$', this.mem[this.pc]]);
+                this.pc += 1;
+        }
+
+        return readable;
     }
 
     step() {
