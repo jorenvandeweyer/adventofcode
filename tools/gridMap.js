@@ -7,16 +7,16 @@ class GridMap extends Map {
         return super.set(`${x},${y}`, value);
     }
 
-    get(x, y, def=' ') {
+    get(x, y, def) {
         return super.has(`${x},${y}`) ? super.get(`${x},${y}`) : def;
     }
 
-    toString() {
+    toString(def=' ') {
         let string = '';
         for (let y = this.yMin; y <= this.yMax; y++) {
             let row = '\n';
             for (let x = this.xMin; x <= this.xMax; x++) {
-                row += this.get(x, y);
+                row += this.get(x, y, def);
             }
             string = row + string;
         }
