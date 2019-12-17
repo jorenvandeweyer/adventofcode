@@ -157,17 +157,17 @@ function findProgram(path, options, program, offset=0) {
 
     if (program.functions.length === 3) return program;
     
-    while(options.names.includes(path[offset])) {
+    while(options.functions.includes(path[offset])) {
         offset++;
     }
 
     for (let i = offset+2; i < path.length; i=i+2) {
-        if (options.names.includes(path[i-2])) return false;
+        if (options.functions.includes(path[i-2])) return false;
 
         const func = path.slice(offset, i);
         if (func.join(',').length > options.maxLength) return false;
         
-        const newPath = replaceRepetitive(path, func, options.names[program.functions.length]);
+        const newPath = replaceRepetitive(path, func, options.functions[program.functions.length]);
 
         const program_new = findProgram(newPath, options, {
             main: newPath,
@@ -188,9 +188,8 @@ async function part2(input, grid) {
 
     const path = findPath(grid);
     const program = findProgram(path, {
-        functions: 3,
         maxLength: 20,
-        names: ['A', 'B', 'C'],
+        functions: ['A', 'B', 'C'],
     });
 
     const intcode = new Intcode(parsed);
