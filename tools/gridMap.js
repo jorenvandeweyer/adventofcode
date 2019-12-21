@@ -29,6 +29,12 @@ class GridMap extends Map {
         return found[0].split(',').map(n => parseInt(n));
     }
 
+    findAll(value) {
+        const found = Array.from(this).filter(([coord, type]) => type === value);
+        if (!found) return false;
+        return found.map(pos => pos[0].split(',').map(n => parseInt(n)));
+    }
+
     clone() {
         const clone = new GridMap();
         Array.from(this).forEach(entry => {
