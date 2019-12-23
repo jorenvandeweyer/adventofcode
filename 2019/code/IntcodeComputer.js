@@ -116,6 +116,7 @@ class IntcodeComputer extends EventListener {
                 this.pc += 4;
                 break;
             case 3:
+                this.emit('input');
                 if (!this.input.length) {
                     this.wait = true;
                     break;
@@ -156,6 +157,7 @@ class IntcodeComputer extends EventListener {
                 break;
             case 99:
                 this.halt = true;
+                this.emit('halt');
                 break;
         }
     }
