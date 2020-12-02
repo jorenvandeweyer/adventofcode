@@ -83,6 +83,16 @@ class Input {
         this.result = this.result.map(x => fn(x));
         return this;
     }
+
+    test(fn) {
+        let count = 0
+
+        for (const x of this.result) {
+            if (fn(x)) count++
+        }
+
+        return count
+    }
 }
 
 module.exports = (year, day, custom=false) => {
