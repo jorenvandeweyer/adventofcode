@@ -1,20 +1,8 @@
 const Input = require('../tools/input');
 
 function passToSeatId (pass) {
-  const rows = { start: 0, end: 127 }
-  const columns = { start: 0, end: 7 }
-
-  for (const instr of pass) {
-    const rowMid = Math.floor((rows.start + rows.end) / 2)
-    const columnMid = Math.floor((columns.start + columns.end) / 2)
-
-    if (instr === 'B') rows.start = rowMid + 1
-    if (instr === 'F') rows.end = rowMid
-    if (instr === 'R') columns.start = columnMid + 1
-    if (instr === 'L') columns.end = columnMid
-  }
-
-  return rows.start * 8 + columns.start
+  const binary = pass.replace(/B|R|F|L/g, m => m === 'B' || m === 'R' ? 1 : 0)
+  return parseInt(binary, 2)
 }
 
 async function part1 (input) {
