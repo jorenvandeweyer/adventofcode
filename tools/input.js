@@ -1,19 +1,8 @@
-const rp = require('request-promise');
-const tough = require('tough-cookie');
 const fs = require('fs').promises;
 const path = require('path');
+const axios = require('axios')
 
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
-
-const cookie = new tough.Cookie({
-    key: "session",
-    value: process.env.AOC_SESSION,
-    domain: process.env.HOST,
-    maxAge: 31536000
-});
-
-const cookiejar = rp.jar();
-cookiejar.setCookie(cookie.cookieString(), `https://${process.env.HOST}`);
 
 class Input {
     constructor(year, day) {
@@ -37,11 +26,12 @@ class Input {
             this.file = await fs.readFile(this.path, 'utf-8');
         } catch(e) {
             console.log('fetching from adventofcode...\n');
-            this.file = await rp({
-                uri: `https://${process.env.HOST}/${this.year}/day/${this.day}/input`,
-                method: 'GET',
-                jar: cookiejar
-            });
+            const res = await axios.default.get(`https://${process.env.HOST}/${this.year}/day/${this.day}/input`, {
+                headers: {
+                    Cookie: `session=${process.env.AOC_SESSION}`
+                }
+            })
+            this.file = res.data
             await this.save();
         }
 

@@ -1,25 +1,21 @@
 const Input = require('../tools/input');
 
 const conditions = [
+  ['cid', false],
   ['byr', true, 'minmax', [1920, 2002]],
   ['iyr', true, 'minmax', [2010, 2020]],
   ['eyr', true, 'minmax', [2020, 2030]],
+  ['ecl', true, 'regex', /^amb|blu|brn|gry|grn|hzl|oth$/],
   ['hcl', true, 'regex', /^#[a-f0-9]{6}$/i],
-  ['ecl', true, 'enum', ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth']],
-  ['pid', true, 'size', 9],
-  ['cid', false],
-  ['hgt', true, 'function', (input) => {
-    const match = input.match(/^(\d+)(cm|in)$/)
-    if (!match) return false
-
-    const unit = match[2]
+  ['pid', true, 'regex', /^\d{9}$/],
+  ['hgt', true, 'regex', /^(\d+)(cm|in)$/, (match) => {
     const value = Number(match[1])
 
-    if (unit === 'cm' && (value < 150 || value > 193)) return false
-    if (unit === 'in' && (value < 59 || value > 76)) return false
+    if (match[2] === 'cm' && (value < 150 || value > 193)) return false
+    if (match[2] === 'in' && (value < 59 || value > 76)) return false
 
     return true
-  }],
+  }]
 ]
 
 function parsePasspord (string) {
@@ -39,12 +35,6 @@ function isValidPasspord (passpord, validate) {
     const value = passpord[condition[0]]
 
     switch (condition[2]) {
-      case 'function':
-        const fn = condition[3]
-
-        if (!fn(value)) return false
-
-        break
       case 'minmax':
         const number = Number(value)
         const [min, max] = condition[3]
@@ -53,15 +43,9 @@ function isValidPasspord (passpord, validate) {
 
         break
       case 'regex':
-        if (value.match(condition[3]) === null) return false
-
-        break
-      case 'enum':
-        if (!condition[3].includes(value)) return false
-
-        break
-      case 'size':
-        if (value.length !== condition[3]) return false
+        const match = value.match(condition[3])
+        if (match === null) return false
+        if (condition[4] && !condition[4](match)) return false
 
         break
       default:
