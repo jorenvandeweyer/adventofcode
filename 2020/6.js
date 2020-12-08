@@ -1,23 +1,17 @@
-
 const Input = require('../tools/input');
 
-function getAnswers (group) {
-  return group.flat().reduce((form, value) => {
-    form[value] = (form[value] ?? 0) + 1
-    return form
-  }, {})
-}
-
 async function part1 (input) {
-  return input.reduce((sum, group) => {
-    return sum + Object.values(getAnswers(group)).length
-  }, 0)
+  return input.reduce((sum, group) => sum + new Set(group.flat()).size, 0)
 }
 
 async function part2 (input) {
   return input.reduce((sum, group) => {
-    return sum + Object.values(getAnswers(group))
-      .filter(answer => answer === group.length).length
+    const form = group.flat().reduce((form, value) => {
+      form[value] = (form[value] ?? 0) + 1
+      return form
+    }, {})
+
+    return sum + Object.values(form).filter(a => a === group.length).length
   }, 0)
 }
 
