@@ -1,6 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const axios = require('axios')
+const v8 = require('v8')
 
 require('dotenv').config({path: path.resolve(__dirname, '../.env')});
 
@@ -62,6 +63,10 @@ class Input {
 
     get get() {
         return this.result;
+    }
+
+    get clone () {
+        return v8.deserialize(v8.serialize(this.result))
     }
 
     split(delimeter) {
