@@ -25,8 +25,8 @@ class Ship {
         this.x -= offset
         break
       case 'F':
-        const dx = offset * Math.cos(this.heading % 360 / 180 * Math.PI)
-        const dy = offset * Math.sin(this.heading % 360 / 180 * Math.PI)
+        const dx = offset * Math.cos(this.heading / 180 * Math.PI)
+        const dy = offset * Math.sin(this.heading / 180 * Math.PI)
         this.x += dx
         this.y += dy
         break
@@ -99,8 +99,8 @@ class Ship2 {
 
     const newAngle = angle + diff
 
-    this.dx = Math.round(length * Math.cos(newAngle % 360 / 180 * Math.PI))
-    this.dy = Math.round(length * Math.sin(newAngle % 360 / 180 * Math.PI))
+    this.dx = Math.round(length * Math.cos(newAngle / 180 * Math.PI))
+    this.dy = Math.round(length * Math.sin(newAngle / 180 * Math.PI))
   }
 }
 
