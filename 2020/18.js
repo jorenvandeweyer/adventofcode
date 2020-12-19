@@ -1,5 +1,4 @@
 const Input = require('../tools/input');
-const v8 = require('v8')
 
 class WeirdCalculator {
   constructor (string, pos, order) {
