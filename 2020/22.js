@@ -1,11 +1,9 @@
 const Input = require('../tools/input');
-const v8 = require('v8')
 
 class Deck {
   constructor (cards) {
     this.history = new Set()
-
-    this.cards = cards
+    this.cards = cards.slice()
   }
 
   getCards () {
@@ -45,35 +43,17 @@ class Deck {
   }
 }
 
-async function part1 (decks) {
-  while (decks.every(deck => !deck.isEmpty)) {
-    const card1 = decks[0].getCard()
-    const card2 = decks[1].getCard()
-
-    if (card1 > card2) {
-      decks[0].addCards(card1, card2)
-    } else {
-      decks[1].addCards(card2, card1)
-    }
-  }
-
-  return decks
-    .find(deck => !deck.isEmpty)
-    .score
-}
-
-function playRound (deck1, deck2, game, round) {
+function playRound (deck1, deck2, recursive) {
   const card1 = deck1.getCard()
   const card2 = deck2.getCard()
 
   let winner = null
 
-  if (deck1.size >= card1 && deck2.size >= card2) {
-
+  if (recursive && deck1.size >= card1 && deck2.size >= card2) {
     const subdeck1 = deck1.createSubdeck(card1)
     const subdeck2 = deck2.createSubdeck(card2)
 
-    winner = playGame(subdeck1, subdeck2, game + 1)
+    winner = playGame(subdeck1, subdeck2, recursive)
   } else {
     winner = card1 > card2
   }
@@ -85,10 +65,7 @@ function playRound (deck1, deck2, game, round) {
   }
 }
 
-function playGame (deck1, deck2, game = 1) {
-
-  let round = 1
-
+function playGame (deck1, deck2, recursive = false) {
   while (true) {
     if (deck1.hasOccured || deck2.hasOccured) return true
     if (deck2.isEmpty) return true
@@ -97,17 +74,24 @@ function playGame (deck1, deck2, game = 1) {
     deck1.remember()
     deck2.remember()
 
-    playRound(deck1, deck2, game, round)
+    playRound(deck1, deck2, recursive)
+  }
+}
 
-    round++
+async function part1 (decks) {
+  const [deck1, deck2] = decks
+
+  if (playGame(deck1, deck2)) {
+    return deck1.score
+  } else {
+    return deck2.score
   }
 }
 
 async function part2 (decks) {
-  const deck1 = decks[0]
-  const deck2 = decks[1]
+  const [deck1, deck2] = decks
 
-  if (playGame(deck1, deck2)) {
+  if (playGame(deck1, deck2, true)) {
     return deck1.score
   } else {
     return deck2.score
@@ -117,25 +101,14 @@ async function part2 (decks) {
 async function main() {
   const input = await Input(2020, 22).fetch()
 
-  const decks1 = input.trim.get.split('\n\n').map(part => {
+  const decks = input.trim.get.split('\n\n').map(part => {
     const split = part.split('\n')
-
     split.shift()
-
-    return new Deck(split.map(Number))
+    return split.map(Number)
   })
 
-  const decks2 = input.trim.get.split('\n\n').map(part => {
-    const split = part.split('\n')
-
-    split.shift()
-
-    return new Deck(split.map(Number))
-  })
-
-
-  await part1(decks1).then(result => console.log('result 1:', result))
-  await part2(decks2).then(result => console.log('result 2:', result))
+  await part1(decks.map(deck => new Deck(deck))).then(result => console.log('result 1:', result))
+  await part2(decks.map(deck => new Deck(deck))).then(result => console.log('result 2:', result))
 }
 
 main();
