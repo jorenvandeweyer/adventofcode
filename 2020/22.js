@@ -78,20 +78,10 @@ function playGame (deck1, deck2, recursive = false) {
   }
 }
 
-async function part1 (decks) {
+async function part1 (decks, recursive) {
   const [deck1, deck2] = decks
 
-  if (playGame(deck1, deck2)) {
-    return deck1.score
-  } else {
-    return deck2.score
-  }
-}
-
-async function part2 (decks) {
-  const [deck1, deck2] = decks
-
-  if (playGame(deck1, deck2, true)) {
+  if (playGame(deck1, deck2, recursive)) {
     return deck1.score
   } else {
     return deck2.score
@@ -107,8 +97,8 @@ async function main() {
     return split.map(Number)
   })
 
-  await part1(decks.map(deck => new Deck(deck))).then(result => console.log('result 1:', result))
-  await part2(decks.map(deck => new Deck(deck))).then(result => console.log('result 2:', result))
+  await part1(decks.map(deck => new Deck(deck)), false).then(result => console.log('result 1:', result))
+  await part1(decks.map(deck => new Deck(deck)), true).then(result => console.log('result 2:', result))
 }
 
 main();

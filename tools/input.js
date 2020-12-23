@@ -32,7 +32,7 @@ class Input {
                     Cookie: `session=${process.env.AOC_SESSION}`
                 }
             })
-            this.file = res.data
+            this.file = res.data.toString()
             await this.save();
         }
 
